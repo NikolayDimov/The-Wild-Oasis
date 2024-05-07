@@ -1,5 +1,6 @@
-import styled, { css, StyledComponent } from "styled-components";
+import styled, { css } from "styled-components";
 import React, { ReactNode } from "react";
+import { StyledComponent } from "styled-components";
 
 interface StyledFormRowProps {
     orientation?: "vertical";
