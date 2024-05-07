@@ -1,31 +1,31 @@
 import styled, { css } from "styled-components";
+import { HTMLAttributes } from "react";
 
-// const test = css`
-//   text-align: center;
-//   ${10 > 5 && "background-color: yellow"}
-// `;
+type HeadingProps = {
+    as?: "h1" | "h2" | "h3";
+} & HTMLAttributes<HTMLHeadingElement>;
 
-const Heading = styled.h1`
-  ${(props) =>
-    props.as === "h1" &&
-    css`
-      font-size: 3rem;
-      font-weight: 600;
-    `}
+const Heading = styled.h1<HeadingProps>`
+    ${(props) =>
+        props.as === "h1" &&
+        css`
+            font-size: 3rem;
+            font-weight: 600;
+        `}
 
-  ${(props) =>
-    props.as === "h2" &&
-    css`
-      font-size: 2rem;
-      font-weight: 600;
-    `}
+    ${(props) =>
+        props.as === "h2" &&
+        css`
+            font-size: 2rem;
+            font-weight: 600;
+        `}
     
     ${(props) =>
-    props.as === "h3" &&
-    css`
-      font-size: 2rem;
-      font-weight: 500;
-    `}
+        props.as === "h3" &&
+        css`
+            font-size: 2rem;
+            font-weight: 500;
+        `}
     
   line-height: 1.4;
 `;
