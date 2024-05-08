@@ -1,12 +1,11 @@
 import styled, { css } from "styled-components";
 import React, { ReactNode } from "react";
-import { StyledComponent } from "styled-components";
 
 interface StyledFormRowProps {
     orientation?: "vertical";
 }
 
-const StyledFormRow: StyledComponent<"div", any, StyledFormRowProps, never> = styled.div<StyledFormRowProps>`
+const StyledFormRow = styled.div<StyledFormRowProps>`
     display: grid;
     align-items: center;
 

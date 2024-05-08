@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { formatCurrency } from "../../utils/helpers";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteCabin } from "../../services/apiCabins";
+import { CabinType, deleteCabin } from "../../services/apiCabins";
 import toast from "react-hot-toast";
 
 // v1
@@ -44,18 +44,6 @@ const Discount = styled.div`
     font-weight: 500;
     color: var(--color-green-700);
 `;
-
-interface CabinType {
-    cabin: {
-        id: string;
-        name: string;
-        maxCapacity: number;
-        regularPrice: number;
-        discount?: number;
-        image: string;
-        description: string;
-    };
-}
 
 const CabinRow: React.FC<CabinType> = ({ cabin }) => {
     const { id: cabinId, name, maxCapacity, regularPrice, discount, image, description } = cabin;
