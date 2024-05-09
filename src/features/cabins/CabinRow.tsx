@@ -1,10 +1,9 @@
 import styled from "styled-components";
 import { formatCurrency } from "../../utils/helpers";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { CabinType, deleteCabin } from "../../services/apiCabins";
-import toast from "react-hot-toast";
+import { CabinType } from "../../services/apiCabins";
 import { useState } from "react";
 import CreateCabinForm from "./CreateCabinForm";
+import { useDeleteCabin } from "./useDeleteCabin";
 
 // v1
 const TableRow = styled.div`
@@ -47,29 +46,21 @@ const Discount = styled.div`
     color: var(--color-green-700);
 `;
 
-const CabinRow: React.FC<CabinType> = ({ cabin }) => {
+interface CabinRowProps {
+    cabin: CabinType;
+}
+
+const CabinRow: React.FC<CabinRowProps> = ({ cabin }) => {
     const [showForm, setShowForm] = useState(false);
-    const { id: cabinId, name, maxCapacity, regularPrice, discount, image, description } = cabin;
+    const { id: cabinId = "", name, maxCapacity, regularPrice, discount, image, description } = cabin;
 
-    const queryClient = useQueryClient();
-
-    const mutation = useMutation({
-        mutationFn: (id: string) => deleteCabin(id),
-        onSuccess: () => {
-            toast.success("Cabin successfully deleted");
-            queryClient.invalidateQueries({
-                queryKey: ["cabins"],
-            });
-        },
-        onError: (err) => toast.error(err.message),
-    });
-
-    const isDeleting = mutation.status === "pending";
+    const { isDeleting, deleteCabin } = useDeleteCabin();
 
     return (
         <>
             <TableRow role="row">
-                <Img src={image} alt={`Cabin ${name}`} />
+                {/* <Img src={image} alt={`Cabin ${name}`} /> */}
+                <Img src={typeof image === "string" ? image : undefined} alt={`Cabin ${name}`} />
 
                 <Cabin>{name}</Cabin>
 
@@ -125,7 +116,7 @@ const CabinRow: React.FC<CabinType> = ({ cabin }) => {
       </div> */}
                 <div>
                     <button onClick={() => setShowForm((show) => !show)}>Edit</button>
-                    <button onClick={() => mutation.mutate(cabinId)} disabled={isDeleting}>
+                    <button onClick={() => deleteCabin(cabinId)} disabled={isDeleting}>
                         Delete
                     </button>
                 </div>
