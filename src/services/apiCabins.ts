@@ -1,5 +1,7 @@
 import supabase, { supabaseUrl } from "./supabase";
 
+// Your code here...
+
 export interface CabinType {
     id?: string;
     name: string;
@@ -7,7 +9,7 @@ export interface CabinType {
     regularPrice: number;
     discount: number;
     description: string;
-    image: File | null; // Assuming 'image' is a file input
+    image?: string | File | null;
 }
 
 export async function getCabins() {
@@ -21,16 +23,25 @@ export async function getCabins() {
     return data;
 }
 
+// apiCabins.ts
 export async function createCabin(newCabin: CabinType) {
+    console.log("newCabin", newCabin);
+
     if (!newCabin.image) {
         throw new Error("Image is required");
     }
 
-    const imageFile = newCabin.image;
+    const imageFile = newCabin.image as File;
+    console.log("imageFile", imageFile);
     const imageName = `${Math.random()}-${imageFile.name}`.replaceAll("/", "");
+    if (!imageName) {
+        throw new Error("Failed to generate image name");
+    }
     const imagePath = `${supabaseUrl}/storage/v1/object/public/cabin-images/${imageName}`;
 
-    const { data, error } = await supabase.from("cabins").insert([{ ...newCabin, image: imagePath }]);
+    const supabasequery = supabase.from("cabins").insert([{ ...newCabin, image: imagePath }]);
+
+    const { data, error } = await supabasequery.single();
 
     if (error) {
         console.error(error);
@@ -46,6 +57,39 @@ export async function createCabin(newCabin: CabinType) {
             console.error(storageError);
             throw new Error("Cabin image could not be uploaded and cabin was not created");
         }
+    }
+
+    return data;
+}
+
+export async function editCabin(updatedCabin: CabinType, id: string) {
+    const { image } = updatedCabin;
+
+    if (image instanceof File) {
+        // If image exists, upload it
+        const imageFile = image;
+        const imageName = `${Math.random()}-${imageFile.name}`.replaceAll("/", "");
+        const imagePath = `${supabaseUrl}/storage/v1/object/public/cabin-images/${imageName}`;
+
+        // Upload image
+        const { error: storageError } = await supabase.storage.from("cabin-images").upload(imageName, imageFile);
+
+        if (storageError) {
+            console.error(storageError);
+            throw new Error("Cabin image could not be uploaded");
+        }
+
+        // Update image path
+        updatedCabin.image = imagePath;
+    }
+
+    const supabasequery = supabase.from("cabins").update(updatedCabin).eq("id", id);
+
+    const { data, error } = await supabasequery.single();
+
+    if (error) {
+        console.error(error);
+        throw new Error("Cabin could not be updated");
     }
 
     return data;
