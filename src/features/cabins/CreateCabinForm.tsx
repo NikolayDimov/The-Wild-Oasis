@@ -5,9 +5,10 @@ import Form from "../../ui/Form";
 import Button from "../../ui/Button";
 import FileInput from "../../ui/FileInput";
 import { Textarea } from "../../ui/Textarea";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { CabinType, createCabin, editCabin } from "../../services/apiCabins";
+import { CabinType } from "../../services/apiCabins";
 import toast from "react-hot-toast";
+import { useCreateCabin } from "./useCreateCabin";
+import { useEditcabin } from "./useEditCabin";
 
 interface CreateCabinFormProps {
     cabinToEdit?: CabinType;
@@ -26,35 +27,13 @@ const CreateCabinForm: React.FC<CreateCabinFormProps> = ({ cabinToEdit }) => {
 
     const isEditSession = Boolean(editId);
 
-    const queryClient = useQueryClient();
     const { register, handleSubmit, formState, reset, getValues } = useForm<CabinType>({
         defaultValues: isEditSession ? editValues : {},
     });
     const { errors } = formState;
 
-    const createCabinMutation = useMutation<void, Error, { newCabinData: CabinType }>({
-        mutationFn: ({ newCabinData }: { newCabinData: CabinType }) => createCabin(newCabinData),
-        onSuccess: () => {
-            toast.success("New cabin successfully created");
-            queryClient.invalidateQueries({ queryKey: ["cabins"] });
-            reset();
-        },
-        onError: (err) => toast.error(err.message),
-    });
-
-    const isCreating = createCabinMutation.status === "pending";
-
-    const editCabinMutation = useMutation<void, Error, { updatedCabin: CabinType; id: string }>({
-        mutationFn: ({ updatedCabin, id }: { updatedCabin: CabinType; id: string }) => editCabin(updatedCabin, id),
-        onSuccess: () => {
-            toast.success("Cabin successfully edited");
-            queryClient.invalidateQueries({ queryKey: ["cabins"] });
-            reset();
-        },
-        onError: (err) => toast.error(err.message),
-    });
-
-    const isEditing = editCabinMutation.status === "pending";
+    const { isCreating, createCabin } = useCreateCabin();
+    const { isEditing, editCabin } = useEditcabin();
 
     const isWorking = isCreating || isEditing;
 
@@ -62,9 +41,9 @@ const CreateCabinForm: React.FC<CreateCabinFormProps> = ({ cabinToEdit }) => {
         const image = typeof data.image === "string" ? data.image : data.image[0];
         try {
             if (isEditSession) {
-                await editCabinMutation.mutateAsync({ updatedCabin: { ...data, image }, id: editId });
+                await editCabin({ updatedCabin: { ...data, image }, id: editId }, { onSuccess: (data) => reset() });
             } else {
-                await createCabinMutation.mutateAsync({ newCabinData: { ...data, image: image } });
+                await createCabin({ newCabinData: { ...data, image: image } }, { onSuccess: (data) => reset() });
             }
         } catch (err) {
             if (err instanceof Error) {
