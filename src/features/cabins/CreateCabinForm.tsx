@@ -1,4 +1,4 @@
-import { FieldErrors, SubmitHandler, useForm } from "react-hook-form";
+import { FieldErrors, FieldValues, SubmitHandler, useForm } from "react-hook-form";
 
 // import { useCreateCabin } from "features/cabins/useCreateCabin";
 import FormRow from "../../ui/FormRow";
@@ -11,16 +11,6 @@ import { Textarea } from "../../ui/Textarea";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { CabinType, createCabin } from "../../services/apiCabins";
 import toast from "react-hot-toast";
-
-// interface FormData {
-//     id: string;
-//     name: string;
-//     maxCapacity: number;
-//     regularPrice: number;
-//     discount: number;
-//     description: string;
-//     image: FileList | null; // Assuming 'image' is a file input
-// }
 
 // Receives closeModal directly from Modal
 function CreateCabinForm({ cabinToEdit, closeModal }) {
@@ -41,7 +31,7 @@ function CreateCabinForm({ cabinToEdit, closeModal }) {
     const { register, handleSubmit, formState, reset, getValues } = useForm();
     const { errors } = formState;
 
-    const mutation = useMutation({
+    const { mutate, status } = useMutation({
         mutationFn: (newCabin: CabinType) => createCabin(newCabin),
         onSuccess: () => {
             toast.success("New cabin successfully created");
@@ -51,36 +41,23 @@ function CreateCabinForm({ cabinToEdit, closeModal }) {
         onError: (err) => toast.error(err.message),
     });
 
-    const { mutate, status } = mutation;
     const isCreating = status === "pending";
 
-    const onSubmit: SubmitHandler<CabinType> = function (data) {
-        // const options = {
-        //     onSuccess: (data) => {
-        //         // If this component is used OUTSIDE the Modal Context, this will return undefined, so we need to test for this
-        //         closeModal?.();
-        //         reset();
-        //     },
-        // };
+    const onSubmit: SubmitHandler<FieldValues> = function (data) {
+        console.log("Data", data);
 
-        // let image: File | undefined;
-        // if (data.image) {
-        //     image = typeof data.image === "object" ? data.image[0] : data.image;
-        // }
+        const cabinData: CabinType = {
+            name: data.name,
+            maxCapacity: data.maxCapacity,
+            regularPrice: data.regularPrice,
+            discount: data.discount,
+            description: data.description,
+            image: data.image[0],
+        };
 
-        // if (isEditSession)
-        //     editCabin(
-        //         {
-        //             newCabinData: { ...data, image },
-        //             id: editId,
-        //         },
-        //         options
-        //     );
-        // else createCabin({ ...data, image }, options);
+        mutate(cabinData);
 
-        mutate(data);
-
-        console.log(data);
+        console.log("cabinData", cabinData);
     };
 
     // Invoked when validation fails
@@ -95,6 +72,7 @@ function CreateCabinForm({ cabinToEdit, closeModal }) {
                     type="text"
                     id="name"
                     // disabled={isWorking}
+                    disabled={isCreating}
                     {...register("name", { required: "This field is required" })}
                 />
             </FormRow>
@@ -104,6 +82,7 @@ function CreateCabinForm({ cabinToEdit, closeModal }) {
                     type="number"
                     id="maxCapacity"
                     // disabled={isWorking}
+                    disabled={isCreating}
                     {...register("maxCapacity", {
                         required: "This field is required",
                         min: {
@@ -119,6 +98,7 @@ function CreateCabinForm({ cabinToEdit, closeModal }) {
                     type="number"
                     id="regularPrice"
                     // disabled={isWorking}
+                    disabled={isCreating}
                     {...register("regularPrice", {
                         required: "This field is required",
                         min: {
@@ -135,6 +115,7 @@ function CreateCabinForm({ cabinToEdit, closeModal }) {
                     id="discount"
                     defaultValue={0}
                     // disabled={isWorking}
+                    disabled={isCreating}
                     {...register("discount", {
                         required: "Can't be empty, make it at least 0",
                         validate: (value) => getValues().regularPrice >= value || "Discount should be less than regular price",
@@ -144,10 +125,11 @@ function CreateCabinForm({ cabinToEdit, closeModal }) {
 
             <FormRow label="Description for website" error={errors?.description?.message as string}>
                 <Textarea
-                    type="number"
+                    // type="number"
                     id="description"
                     defaultValue=""
                     // disabled={isWorking}
+                    disabled={isCreating}
                     {...register("description", { required: "This field is required" })}
                 />
             </FormRow>
@@ -156,9 +138,10 @@ function CreateCabinForm({ cabinToEdit, closeModal }) {
                 <FileInput
                     id="image"
                     accept="image/*"
+                    // type="file"      // no need to pass here, because FileInput has styled.input.attrs({ type: "file" })`
                     // disabled={isWorking}
                     {...register("image", {
-                        // required: 'This field is required',
+                        required: "This field is required",
                         // required: isEditSession ? false : "This field is required",
                         // VIDEO this doesn't work, so never mind about this, it's too much
                         // validate: (value) =>
