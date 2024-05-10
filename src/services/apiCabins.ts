@@ -49,7 +49,7 @@ export async function createCabin(newCabin: CabinType) {
     } else {
         // If the image is a File object, generate a new image path
         const imageFile = newCabin.image as File;
-        console.log("imageFile", imageFile);
+        // console.log("imageFile", imageFile);
         const imageName = `${Math.random()}-${imageFile.name}`.replaceAll("/", "");
         if (!imageName) {
             throw new Error("Failed to generate image name");

@@ -55,7 +55,7 @@ interface CabinRowProps {
 const CabinRow: React.FC<CabinRowProps> = ({ cabin }) => {
     const [showForm, setShowForm] = useState(false);
     const { isDeleting, deleteCabin } = useDeleteCabin();
-    const { isCreating, createCabin } = useCreateCabin();
+    const { createCabin } = useCreateCabin();
     const { id: cabinId, name, maxCapacity, regularPrice, discount, image, description } = cabin;
 
     console.log("Image:", image);
@@ -130,7 +130,7 @@ const CabinRow: React.FC<CabinRowProps> = ({ cabin }) => {
                     <button onClick={() => setShowForm((show) => !show)}>
                         <HiPencil />
                     </button>
-                    <button onClick={() => deleteCabin(cabinId)} disabled={isDeleting}>
+                    <button onClick={() => deleteCabin(cabinId || "")} disabled={isDeleting}>
                         <HiTrash />
                     </button>
                 </div>
