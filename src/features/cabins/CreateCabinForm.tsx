@@ -73,8 +73,6 @@ const CreateCabinForm: React.FC<CreateCabinFormProps> = ({ cabinToEdit, onCloseM
         console.log("Failed validation!", errors);
     };
 
-    console.log("onCloseModal:", onCloseModal);
-
     return (
         <Form onSubmit={handleSubmit(onSubmit, onError)} type={onCloseModal ? "modal" : "regular"}>
             <FormRow label="Cabin name" error={errors?.name?.message as string}>

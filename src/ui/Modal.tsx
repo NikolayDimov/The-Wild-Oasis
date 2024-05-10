@@ -2,6 +2,7 @@ import { ReactElement, ReactNode, cloneElement, createContext, useContext, useSt
 import { createPortal } from "react-dom";
 import { HiXMark } from "react-icons/hi2";
 import styled from "styled-components";
+import { useOutsideClick } from "../hooks/useOutsideClick";
 
 export const StyledModal = styled.div`
     position: fixed;
@@ -72,7 +73,8 @@ const Modal: React.FC<ModalProps> & {
     const [openName, setOpenName] = useState<string>("");
 
     const close = () => setOpenName("");
-    const open = setOpenName;
+    // const open = setOpenName;
+    const open = (name: string) => setOpenName(name);
 
     return <ModalContext.Provider value={{ openName, close, open }}>{children}</ModalContext.Provider>;
 };
@@ -96,13 +98,37 @@ interface WindowProps {
 const Window: React.FC<WindowProps> = ({ children, name }) => {
     const { openName, close } = useContext(ModalContext);
 
+    const ref = useOutsideClick({ handler: close });
+
+    // CODE IS MOVE IN useOutsideClick hook
+    // const ref = useRef<HTMLDivElement>(null);
+
+    // useEffect(() => {
+    //     function handleClick(e: MouseEvent) {
+    //         if (ref.current && !ref.current.contains(e.target as Node)) {
+    //             // console.log("click outside");
+    //             close();
+    //         }
+    //     }
+
+    //     // document.addEventListener("click", handleClick)
+    //     // Events in JS bubble up
+    //     // When is clicked on 'Add new cabin' btn -> Modal will be attached to the DOM
+    //     // This click will aslo detect click outsite the Modal window, which will immediately close that Modal window
+    //     // we have to use not Bubble phase. We must use Capturing phase - as the event moves down the DOM tree
+    //     // pass 'true' like last argument to addEventListener and removeEventListener. This will change Bubbling phase to Capturing phase
+    //     document.addEventListener("click", handleClick, true);
+
+    //     return () => document.removeEventListener("click", handleClick, true);
+    // }, [close]);
+
     if (name !== openName) {
         return null;
     }
 
     return createPortal(
         <Overlay>
-            <StyledModal>
+            <StyledModal ref={ref}>
                 <Button onClick={close}>
                     <HiXMark />
                 </Button>

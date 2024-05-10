@@ -21,7 +21,7 @@ function UpdateUserDataForm() {
 
     const { mutate: updateUser, isLoading: isUpdating } = useUpdateUser();
 
-    function handleSubmit(e) {
+    function handleSubmit(e: React.ChangeEvent<HTMLInputElement>) {
         e.preventDefault();
         if (!fullName) return;
 
@@ -37,7 +37,7 @@ function UpdateUserDataForm() {
         );
     }
 
-    function handleCancel(e) {
+    function handleCancel(e: React.ChangeEvent<HTMLInputElement>) {
         // We don't even need preventDefault because this button was designed to reset the form (remember, it has the HTML attribute 'reset')
         setFullName(currentFullName);
         setAvatar(null);
