@@ -1,5 +1,6 @@
 import { ReactNode, createContext, useContext } from "react";
 import styled, { CSSProperties } from "styled-components";
+import { CabinType } from "../services/apiCabins";
 
 interface CommonRowProps {
     columns: string | CSSProperties["gridTemplateColumns"];
@@ -95,7 +96,12 @@ function Row({ children }: { children: ReactNode }) {
     );
 }
 
-function Body({ children }) {}
+function Body({ data, render }: { data: CabinType[]; render: (cabin: CabinType) => React.ReactNode }) {
+    if (!data.length) {
+        return <Empty>No data to show at the moment</Empty>;
+    }
+    return <StyledBody>{data.map(render)}</StyledBody>;
+}
 
 Table.Header = Header;
 Table.Row = Row;
