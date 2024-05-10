@@ -31,35 +31,53 @@ export async function createCabin(newCabin: CabinType) {
         throw new Error("Image is required");
     }
 
-    const imageFile = newCabin.image as File;
-    console.log("imageFile", imageFile);
-    const imageName = `${Math.random()}-${imageFile.name}`.replaceAll("/", "");
-    if (!imageName) {
-        throw new Error("Failed to generate image name");
-    }
-    const imagePath = `${supabaseUrl}/storage/v1/object/public/cabin-images/${imageName}`;
+    // Check if the image is a string (URL) or a File object
+    // FOR DUPLICATE FUNCTION
+    if (typeof newCabin.image === "string") {
+        // If the image is already a string (URL), use it directly
+        const imagePath = newCabin.image;
+        const supabasequery = supabase.from("cabins").insert([{ ...newCabin, image: imagePath }]);
+        const { data, error } = await supabasequery.single();
 
-    const supabasequery = supabase.from("cabins").insert([{ ...newCabin, image: imagePath }]);
-
-    const { data, error } = await supabasequery.single();
-
-    if (error) {
-        console.error(error);
-        throw new Error("Cabin could not be created");
-    }
-
-    const { error: storageError } = await supabase.storage.from("cabin-images").upload(imageName, imageFile);
-
-    if (storageError) {
-        if (data) {
-            const { id } = data;
-            await supabase.from("cabins").delete().eq("id", id);
-            console.error(storageError);
-            throw new Error("Cabin image could not be uploaded and cabin was not created");
+        if (error) {
+            console.error(error);
+            throw new Error("Cabin could not be created");
         }
-    }
 
-    return data;
+        return data;
+        // FOR CREATE NEW CABIN
+    } else {
+        // If the image is a File object, generate a new image path
+        const imageFile = newCabin.image as File;
+        console.log("imageFile", imageFile);
+        const imageName = `${Math.random()}-${imageFile.name}`.replaceAll("/", "");
+        if (!imageName) {
+            throw new Error("Failed to generate image name");
+        }
+        const imagePath = `${supabaseUrl}/storage/v1/object/public/cabin-images/${imageName}`;
+
+        const supabasequery = supabase.from("cabins").insert([{ ...newCabin, image: imagePath }]);
+
+        const { data, error } = await supabasequery.single();
+
+        if (error) {
+            console.error(error);
+            throw new Error("Cabin could not be created");
+        }
+
+        const { error: storageError } = await supabase.storage.from("cabin-images").upload(imageName, imageFile);
+
+        if (storageError) {
+            if (data) {
+                const { id } = data;
+                await supabase.from("cabins").delete().eq("id", id);
+                console.error(storageError);
+                throw new Error("Cabin image could not be uploaded and cabin was not created");
+            }
+        }
+
+        return data;
+    }
 }
 
 export async function editCabin(updatedCabin: CabinType, id: string) {

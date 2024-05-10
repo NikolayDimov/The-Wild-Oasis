@@ -56,18 +56,20 @@ const CabinRow: React.FC<CabinRowProps> = ({ cabin }) => {
     const [showForm, setShowForm] = useState(false);
     const { isDeleting, deleteCabin } = useDeleteCabin();
     const { isCreating, createCabin } = useCreateCabin();
-    const { id: cabinId = "", name, maxCapacity, regularPrice, discount, image, description } = cabin;
+    const { id: cabinId, name, maxCapacity, regularPrice, discount, image, description } = cabin;
+
+    console.log("Image:", image);
 
     function handleDuplicate() {
-        const newImage = typeof image === "string" ? image : undefined;
-        createCabin({ newCabinData: { name: `Copy of ${name}`, maxCapacity, regularPrice, discount, image: newImage, description } });
+        // const newImage = typeof image === "string" ? image : image[0];
+        createCabin({ newCabinData: { name: `Copy of ${name}`, maxCapacity, regularPrice, discount, description, image } });
     }
 
     return (
         <>
             <TableRow role="row">
-                {/* <Img src={image} alt={`Cabin ${name}`} /> */}
-                <Img src={typeof image === "string" ? image : undefined} alt={`Cabin ${name}`} />
+                <Img src={image} alt={`Cabin ${name}`} />
+                {/* <Img src={typeof image === "string" ? image : Array.isArray(image) ? image[0] : undefined} alt={`Cabin ${name}`} /> */}
 
                 <Cabin>{name}</Cabin>
 
