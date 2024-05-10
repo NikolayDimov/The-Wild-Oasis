@@ -1,12 +1,12 @@
 import styled from "styled-components";
 import Button from "./Button";
 import Heading from "./Heading";
-import React from "react";
 
 interface ConfirmDeleteProps {
     resource: string;
     disabled: boolean;
-    closeModal: () => void;
+    onCloseModal?: () => void;
+    onConfirm: () => void;
 }
 
 const StyledConfirmDelete = styled.div`
@@ -27,19 +27,17 @@ const StyledConfirmDelete = styled.div`
     }
 `;
 
-function ConfirmDelete({ resource, disabled, closeModal }: ConfirmDeleteProps) {
-    function handleConfirmClick() {}
-
+function ConfirmDelete({ resource, disabled, onCloseModal, onConfirm }: ConfirmDeleteProps) {
     return (
         <StyledConfirmDelete>
             <Heading as="h3">Delete {resource}</Heading>
             <p>Are you sure you want to delete this {resource} permanently? This action cannot be undone.</p>
 
             <div>
-                <Button variation="secondary" onClick={closeModal}>
+                <Button variation="secondary" onClick={onCloseModal}>
                     Cancel
                 </Button>
-                <Button variation="danger" onClick={handleConfirmClick} disabled={disabled}>
+                <Button variation="danger" onClick={onConfirm} disabled={disabled}>
                     Delete
                 </Button>
             </div>
