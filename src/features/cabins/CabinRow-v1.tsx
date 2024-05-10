@@ -81,6 +81,10 @@ const CabinRow: React.FC<CabinRowProps> = ({ cabin }) => {
             {discount ? <Discount>{formatCurrency(discount)}</Discount> : <span>&mdash;</span>}
 
             <div>
+                <button onClick={handleDuplicate}>
+                    <HiSquare2Stack />
+                </button>
+
                 <Modal>
                     <Modal.Open opens="cabin-edit">
                         <button>
