@@ -58,7 +58,7 @@ const CabinRow: React.FC<CabinRowProps> = ({ cabin }) => {
     const { createCabin } = useCreateCabin();
     const { id: cabinId, name, maxCapacity, regularPrice, discount, image, description } = cabin;
 
-    console.log("Image:", image);
+    // console.log("Image:", image);
 
     function handleDuplicate() {
         // const newImage = typeof image === "string" ? image : image[0];

@@ -12,9 +12,10 @@ import { useEditcabin } from "./useEditCabin";
 
 interface CreateCabinFormProps {
     cabinToEdit?: CabinType;
+    onCloseModal?: () => void;
 }
 
-const CreateCabinForm: React.FC<CreateCabinFormProps> = ({ cabinToEdit }) => {
+const CreateCabinForm: React.FC<CreateCabinFormProps> = ({ cabinToEdit, onCloseModal }) => {
     const { id: editId = "", ...editValues } = cabinToEdit || {
         id: "",
         name: "",
@@ -41,9 +42,25 @@ const CreateCabinForm: React.FC<CreateCabinFormProps> = ({ cabinToEdit }) => {
         const image = typeof data.image === "string" ? data.image : data.image[0];
         try {
             if (isEditSession) {
-                await editCabin({ updatedCabin: { ...data, image }, id: editId }, { onSuccess: (data) => reset() });
+                await editCabin(
+                    { updatedCabin: { ...data, image }, id: editId },
+                    {
+                        onSuccess: (data) => {
+                            reset();
+                            onCloseModal?.();
+                        },
+                    }
+                );
             } else {
-                await createCabin({ newCabinData: { ...data, image: image } }, { onSuccess: (data) => reset() });
+                await createCabin(
+                    { newCabinData: { ...data, image: image } },
+                    {
+                        onSuccess: (data) => {
+                            reset();
+                            onCloseModal?.();
+                        },
+                    }
+                );
             }
         } catch (err) {
             if (err instanceof Error) {
@@ -56,8 +73,10 @@ const CreateCabinForm: React.FC<CreateCabinFormProps> = ({ cabinToEdit }) => {
         console.log("Failed validation!", errors);
     };
 
+    console.log("onCloseModal:", onCloseModal);
+
     return (
-        <Form onSubmit={handleSubmit(onSubmit, onError)} type="modal">
+        <Form onSubmit={handleSubmit(onSubmit, onError)} type={onCloseModal ? "modal" : "regular"}>
             <FormRow label="Cabin name" error={errors?.name?.message as string}>
                 <Input type="text" id="name" disabled={isWorking} {...register("name", { required: "This field is required" })} />
             </FormRow>
@@ -126,7 +145,7 @@ const CreateCabinForm: React.FC<CreateCabinFormProps> = ({ cabinToEdit }) => {
             </FormRow>
 
             <FormRow>
-                <Button variation="secondary" type="reset">
+                <Button variation="secondary" type="reset" onClick={() => onCloseModal && onCloseModal()}>
                     Cancel
                 </Button>
                 <Button disabled={isWorking}>{isEditSession ? "Edit cabin" : "Create new cabin"}</Button>
