@@ -6,7 +6,7 @@ interface SortByProps {
     options: { value: string; label: string }[];
 }
 
-function SortBy({ options }: SortByProps) {
+const SortBy: React.FC<SortByProps> = ({ options }) => {
     const [searchParams, setSearchParams] = useSearchParams();
     const sortBy = searchParams.get("sortBy") || "";
 
@@ -16,6 +16,6 @@ function SortBy({ options }: SortByProps) {
     }
 
     return <Select options={options} type="white" value={sortBy} onChange={handleChange} />;
-}
+};
 
 export default SortBy;

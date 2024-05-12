@@ -9,9 +9,10 @@ interface Option {
 
 // Define the props for Select component
 interface SelectProps {
-    options: Option[]; // Array of Option objects
+    options: Option[];
     value: string;
-    onChange: (event: ChangeEvent<HTMLSelectElement>) => void; // Event handler
+    onChange: (event: ChangeEvent<HTMLSelectElement>) => void;
+    type?: string;
 }
 
 // Define the styled component for Select
