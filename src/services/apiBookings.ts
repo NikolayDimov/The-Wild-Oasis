@@ -1,15 +1,21 @@
-import { BookingFilter } from "../features/bookings/useBookings";
+import { BookingFilter, BookingSortBy } from "../features/bookings/useBookings";
 import { getToday } from "../utils/helpers";
 import supabase from "./supabase";
 
-export async function getBookings({ filter }: { filter: BookingFilter | null }) {
+export async function getBookings({ filter, sortBy }: { filter: BookingFilter | null; sortBy: BookingSortBy }) {
     let query = supabase
         .from("bookings")
         .select("id, created_at, startDate, endDate, numNights, numGuests, status, totalPrice, cabins(name), guests(fullName, email)");
 
     // FILTER
-    if (filter !== null) {
-        query = query[filter.method || "eq"](filter.field, filter.value);
+    if (filter) {
+        // query = query[filter.method || "eq"](filter.field, filter.value);
+        query = query.eq(filter.field, filter.value);
+    }
+
+    // SORT
+    if (sortBy) {
+        query = query.order(sortBy.field, { ascending: sortBy.direction === "asc" });
     }
 
     const { data, error } = await query;

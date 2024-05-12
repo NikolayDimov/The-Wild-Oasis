@@ -3,6 +3,10 @@ import { getBookings } from "../../services/apiBookings";
 import { useSearchParams } from "react-router-dom";
 
 export type BookingFilter = { field: string; value: string };
+export interface BookingSortBy {
+    field: string;
+    direction: "asc" | "desc";
+}
 
 export function useBookings() {
     const [searchParams] = useSearchParams();
@@ -11,13 +15,19 @@ export function useBookings() {
     const filterValue = searchParams.get("status");
     const filter = !filterValue || filterValue === "all" ? null : { field: "status", value: filterValue };
 
+    // SORT
+    const sortByRaw = searchParams.get("sortBy") || "startDate-desc";
+    const [field, rawDirection] = sortByRaw.split("-");
+    const direction: "asc" | "desc" = rawDirection === "asc" ? "asc" : "desc";
+    const sortBy: BookingSortBy = { field, direction };
+
     const {
         isLoading,
         data: bookings,
         error,
     } = useQuery({
-        queryKey: ["bookings", filter],
-        queryFn: () => getBookings({ filter }),
+        queryKey: ["bookings", filter, sortBy],
+        queryFn: () => getBookings({ filter, sortBy: { field, direction } }),
     });
 
     return { isLoading, bookings, error };
