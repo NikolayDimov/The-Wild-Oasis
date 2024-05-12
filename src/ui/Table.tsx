@@ -11,7 +11,12 @@ export const StyledTable = styled.div`
     overflow: hidden;
 `;
 
-const CommonRow = styled.div<{ $columns?: string | CSSProperties["gridTemplateColumns"] }>`
+interface CommonRowProps {
+    $columns?: string | CSSProperties["gridTemplateColumns"];
+    role?: string;
+}
+
+export const CommonRow = styled.div<CommonRowProps>`
     display: grid;
     grid-template-columns: ${(props) => props.$columns};
     column-gap: 2.4rem;
@@ -66,38 +71,61 @@ interface TableContextType {
 
 const TableContext = createContext<TableContextType>({ columns: "" });
 
-function Table({ columns, children }: { columns: string | CSSProperties["gridTemplateColumns"]; children: ReactNode }) {
+interface TableProps {
+    columns: string | CSSProperties["gridTemplateColumns"];
+    children: ReactNode;
+}
+const Table: React.FC<TableProps> & {
+    Header: React.FC<{ children: ReactNode }>;
+    Row: React.FC<{ children: ReactNode; role?: string }>;
+    Body: React.FC<{ data: CabinType[]; render: (cabin: CabinType) => React.ReactNode }>;
+    Footer: typeof Footer;
+} = ({ columns, children }) => {
     return (
         <TableContext.Provider value={{ columns }}>
             <StyledTable role="table">{children}</StyledTable>
         </TableContext.Provider>
     );
+};
+
+interface HeaderProps {
+    children: ReactNode;
 }
 
-function Header({ children }: { children: ReactNode }) {
+const Header: React.FC<HeaderProps> = ({ children }) => {
     const { columns } = useContext(TableContext);
     return (
         <StyledHeader role="row" $columns={columns} as="header">
             {children}
         </StyledHeader>
     );
+};
+
+interface RowProps {
+    children: ReactNode;
+    role?: string;
 }
 
-function Row({ children }: { children: ReactNode }) {
+const Row: React.FC<RowProps> = ({ children, role }) => {
     const { columns } = useContext(TableContext);
     return (
         <StyledRow role="row" $columns={columns}>
             {children}
         </StyledRow>
     );
+};
+
+interface BodyProps {
+    data: CabinType[];
+    render: (cabin: CabinType) => React.ReactNode;
 }
 
-function Body({ data, render }: { data: CabinType[]; render: (cabin: CabinType) => React.ReactNode }) {
+const Body: React.FC<BodyProps> = ({ data, render }) => {
     if (!data.length) {
         return <Empty>No data to show at the moment</Empty>;
     }
     return <StyledBody>{data.map(render)}</StyledBody>;
-}
+};
 
 Table.Header = Header;
 Table.Row = Row;
