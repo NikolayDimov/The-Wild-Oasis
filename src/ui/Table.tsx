@@ -2,10 +2,6 @@ import { ReactNode, createContext, useContext } from "react";
 import styled, { CSSProperties } from "styled-components";
 import { CabinType } from "../services/apiCabins";
 
-interface CommonRowProps {
-    columns: string | CSSProperties["gridTemplateColumns"];
-}
-
 export const StyledTable = styled.div`
     border: 1px solid var(--color-grey-200);
 
@@ -15,9 +11,9 @@ export const StyledTable = styled.div`
     overflow: hidden;
 `;
 
-const CommonRow = styled.div<CommonRowProps>`
+const CommonRow = styled.div<{ $columns?: string | CSSProperties["gridTemplateColumns"] }>`
     display: grid;
-    grid-template-columns: ${(props) => props.columns};
+    grid-template-columns: ${(props) => props.$columns};
     column-gap: 2.4rem;
     align-items: center;
     transition: none;
@@ -81,7 +77,7 @@ function Table({ columns, children }: { columns: string | CSSProperties["gridTem
 function Header({ children }: { children: ReactNode }) {
     const { columns } = useContext(TableContext);
     return (
-        <StyledHeader role="row" columns={columns} as="header">
+        <StyledHeader role="row" $columns={columns} as="header">
             {children}
         </StyledHeader>
     );
@@ -90,7 +86,7 @@ function Header({ children }: { children: ReactNode }) {
 function Row({ children }: { children: ReactNode }) {
     const { columns } = useContext(TableContext);
     return (
-        <StyledRow role="row" columns={columns}>
+        <StyledRow role="row" $columns={columns}>
             {children}
         </StyledRow>
     );
