@@ -21,14 +21,14 @@ export function useBookings() {
     const direction: "asc" | "desc" = rawDirection === "asc" ? "asc" : "desc";
     const sortBy: BookingSortBy = { field, direction };
 
-    const {
-        isLoading,
-        data: bookings,
-        error,
-    } = useQuery({
-        queryKey: ["bookings", filter, sortBy],
-        queryFn: () => getBookings({ filter, sortBy: { field, direction } }),
+    // PAGINATION
+    const page = !searchParams.get("page") ? 1 : Number(searchParams.get("page"));
+
+    const { isLoading, data, error } = useQuery({
+        queryKey: ["bookings", filter, sortBy, page],
+        queryFn: () => getBookings({ filter, sortBy, page }),
     });
 
-    return { isLoading, bookings, error };
+    // return { isLoading, bookings, error, count };
+    return { isLoading, bookings: data?.data, error, count: data?.count, page };
 }

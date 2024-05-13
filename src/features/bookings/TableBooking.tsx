@@ -1,7 +1,6 @@
 import { ReactNode, createContext, useContext } from "react";
 import styled, { CSSProperties } from "styled-components";
-import { CabinType } from "../services/apiCabins";
-import { Booking } from "../features/bookings/BookingRow";
+import { Booking } from "./BookingRow";
 
 export const StyledTable = styled.div`
     border: 1px solid var(--color-grey-200);
@@ -79,7 +78,7 @@ interface TableProps {
 const Table: React.FC<TableProps> & {
     Header: React.FC<{ children: ReactNode }>;
     Row: React.FC<{ children: ReactNode; role?: string }>;
-    Body: React.FC<{ data: CabinType[]; render: (cabin: CabinType) => React.ReactNode }>;
+    BodyBooking: React.FC<{ data: Booking[]; render: (booking: Booking) => React.ReactNode }>;
     Footer: typeof Footer;
 } = ({ columns, children }) => {
     return (
@@ -116,12 +115,12 @@ const Row: React.FC<RowProps> = ({ children, role }) => {
     );
 };
 
-interface BodyProps {
-    data: CabinType[];
-    render: (cabin: CabinType) => React.ReactNode;
+interface BodyBookingProps {
+    data: Booking[];
+    render: (booking: Booking) => React.ReactNode;
 }
 
-const Body: React.FC<BodyProps> = ({ data, render }) => {
+const BodyBooking: React.FC<BodyBookingProps> = ({ data, render }) => {
     if (!data.length) {
         return <Empty>No data to show at the moment</Empty>;
     }
@@ -130,7 +129,7 @@ const Body: React.FC<BodyProps> = ({ data, render }) => {
 
 Table.Header = Header;
 Table.Row = Row;
-Table.Body = Body;
+Table.BodyBooking = BodyBooking;
 Table.Footer = Footer;
 
 export default Table;
