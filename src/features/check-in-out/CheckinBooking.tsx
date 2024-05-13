@@ -12,12 +12,13 @@ import Checkbox from "../../ui/Checkbox";
 import BookingDataBox from "features/bookings/BookingDataBox";
 
 import { useBooking } from "features/bookings/useBooking";
-import { useMoveBack } from "hooks/useMoveBack";
+
 import { useCheckin } from "./useCheckin";
 
 import styled from "styled-components";
 import { box } from "styles/styles";
 import { useSettings } from "features/settings/useSettings";
+import { useMoveBack } from "../../hooks/useMoveBack";
 
 const Box = styled.div`
     ${box}

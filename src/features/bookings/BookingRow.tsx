@@ -16,29 +16,24 @@ export interface Booking {
     endDate: Date;
     numNights: number;
     numGuests: number;
+    cabinPrice: number;
+    extrasPrice: number;
     totalPrice: number;
+    hasBreakfast: boolean;
+    observations: string;
+    isPaid: boolean;
     status: string;
     guests: {
         fullName: string;
         email: string;
+        country: string;
+        countryFlag: string;
+        nationalID: string;
     };
     cabins: {
         name: string;
     };
 }
-
-// export interface Booking {
-//     id: string;
-//     created_at: string;
-//     startDate: string;
-//     endDate: string;
-//     numNights: number;
-//     numGuests: number;
-//     status: string;
-//     totalPrice: number;
-//     cabins: { name: string }[];
-//     guests: { fullName: string; email: string }[];
-// }
 
 const Cabin = styled.div`
     font-size: 1.6rem;
@@ -121,7 +116,6 @@ const BookingRow: React.FC<{ booking: Booking }> = ({ booking }) => {
 
             <Amount>{formatCurrency(totalPrice)}</Amount>
 
-            {/* VIDEO we could export this into own component... */}
             <Modal>
                 <Menus.Menu>
                     <Menus.Toggle id={bookingId} />
