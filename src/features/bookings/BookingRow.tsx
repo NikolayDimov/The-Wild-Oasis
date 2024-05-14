@@ -9,6 +9,7 @@ import Menus from "../../ui/Menus";
 
 import { formatCurrency, formatDistanceFromNow } from "../../utils/helpers";
 import Table from "./TableBooking";
+import { useCheckout } from "../check-in-out/useCheckout";
 export interface Booking {
     id: string;
     created_at: Date;
@@ -77,7 +78,7 @@ const BookingRow: React.FC<{ booking: Booking }> = ({ booking }) => {
     } = booking;
 
     // const { mutate: deleteBooking, isLoading: isDeleting } = useDeleteBooking();
-    // const { mutate: checkout, isLoading: isCheckingOut } = useCheckout();
+    const { checkout, isCheckingOut } = useCheckout();
 
     const navigate = useNavigate();
 
@@ -130,11 +131,11 @@ const BookingRow: React.FC<{ booking: Booking }> = ({ booking }) => {
                             </Menus.Button>
                         )}
 
-                        {/* {status === "checked-in" && (
+                        {status === "checked-in" && (
                             <Menus.Button onClick={() => checkout(bookingId)} disabled={isCheckingOut} icon={<HiArrowUpOnSquare />}>
                                 Check out
                             </Menus.Button>
-                        )} */}
+                        )}
 
                         <Menus.Button icon={<HiPencil />}>Edit booking</Menus.Button>
                         {/* <Menus.Button>Delete</Menus.Button> */}

@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import styled, { css } from "styled-components";
 
 type Size = "small" | "medium" | "large";
@@ -6,6 +7,7 @@ type Variation = "primary" | "secondary" | "danger";
 interface ButtonProps {
     size?: Size;
     variation?: Variation;
+    icon?: ReactNode;
 }
 
 const sizes = {

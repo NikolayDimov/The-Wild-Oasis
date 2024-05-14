@@ -5,13 +5,14 @@ import Heading from "../../ui/Heading";
 import Tag from "../../ui/Tag";
 import ButtonGroup from "../../ui/ButtonGroup";
 import Button from "../../ui/Button";
-import Modal from "../../ui/Modal";
 import ButtonText from "../../ui/ButtonText";
 import { useBooking } from "./useBooking";
 import Spinner from "../../ui/Spinner";
 import Empty from "../../ui/Empty";
 import { useMoveBack } from "../../hooks/useMoveBack";
 import BookingDataBox from "./BookingDataBox";
+import { useCheckout } from "../check-in-out/useCheckout";
+import { HiArrowUpOnSquare } from "react-icons/hi2";
 
 const HeadingGroup = styled.div`
     display: flex;
@@ -22,7 +23,7 @@ const HeadingGroup = styled.div`
 function BookingDetail() {
     const { booking, isLoading } = useBooking();
     // const { mutate: deleteBooking, isLoading: isDeleting } = useDeleteBooking();
-    // const { mutate: checkout, isLoading: isCheckingOut } = useCheckout();
+    const { checkout, isCheckingOut } = useCheckout();
 
     const moveBack = useMoveBack();
     const navigate = useNavigate();
@@ -60,11 +61,11 @@ function BookingDetail() {
             <ButtonGroup>
                 {status === "unconfirmed" && <Button onClick={() => navigate(`/checkin/${bookingId}`)}>Check in</Button>}
 
-                {/* {status === "checked-in" && (
-                    <Button onClick={() => checkout(bookingId)} disabled={isCheckingOut}>
+                {status === "checked-in" && (
+                    <Button onClick={() => checkout(bookingId)} disabled={isCheckingOut} icon={<HiArrowUpOnSquare />}>
                         Check out
                     </Button>
-                )} */}
+                )}
 
                 {/* <Modal>
                     <Modal.Toggle opens="delete">

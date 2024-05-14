@@ -155,8 +155,9 @@ interface ButtonProps {
     children: ReactNode;
     icon: ReactNode;
     onClick?: () => void;
+    disabled?: boolean;
 }
-const Button: React.FC<ButtonProps> = ({ children, icon, onClick }) => {
+const Button: React.FC<ButtonProps> = ({ children, icon, onClick, disabled }) => {
     const { close } = useContext(MenusContext);
 
     function handleClick() {
@@ -166,7 +167,7 @@ const Button: React.FC<ButtonProps> = ({ children, icon, onClick }) => {
 
     return (
         <li>
-            <StyledButton onClick={handleClick}>
+            <StyledButton onClick={handleClick} disabled={disabled}>
                 {icon}
                 <span>{children}</span>
             </StyledButton>
