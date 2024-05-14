@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-
 import Row from "../../ui/Row";
 import Heading from "../../ui/Heading";
 import Tag from "../../ui/Tag";
@@ -61,11 +60,11 @@ function BookingDetail() {
             <ButtonGroup>
                 {status === "unconfirmed" && <Button onClick={() => navigate(`/checkin/${bookingId}`)}>Check in</Button>}
 
-                {status === "checked-in" && (
+                {/* {status === "checked-in" && (
                     <Button onClick={() => checkout(bookingId)} disabled={isCheckingOut}>
                         Check out
                     </Button>
-                )}
+                )} */}
 
                 {/* <Modal>
                     <Modal.Toggle opens="delete">

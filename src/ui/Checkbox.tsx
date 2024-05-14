@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import React, { ChangeEvent, ReactNode } from "react";
+import { ChangeEvent, ReactNode } from "react";
 
 const StyledCheckbox = styled.div`
     display: flex;

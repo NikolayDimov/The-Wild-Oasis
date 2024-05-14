@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { formatCurrency } from "utils/helpers";
 
 import Spinner from "../../ui/Spinner";
 import Row from "../../ui/Row";
@@ -9,19 +8,19 @@ import Button from "../../ui/Button";
 import ButtonText from "../../ui/ButtonText";
 import Checkbox from "../../ui/Checkbox";
 
-import BookingDataBox from "features/bookings/BookingDataBox";
-
-import { useBooking } from "features/bookings/useBooking";
-
-import { useCheckin } from "./useCheckin";
-
 import styled from "styled-components";
-import { box } from "styles/styles";
-import { useSettings } from "features/settings/useSettings";
-import { useMoveBack } from "../../hooks/useMoveBack";
+// import { box } from "styles/styles";
 
+import { useMoveBack } from "../../hooks/useMoveBack";
+import { useBooking } from "../bookings/useBooking";
+import { useSettings } from "../settings/useSettings";
+import BookingDataBox from "../bookings/BookingDataBox";
+import { formatCurrency } from "../../utils/helpers";
+import { useChecking } from "./useCheckin";
+
+/* ${box} */
 const Box = styled.div`
-    ${box}
+    padding: 3.2rem 4rem;
     padding: 2.4rem 4rem;
 `;
 
@@ -30,7 +29,7 @@ function CheckinBooking() {
     const [addBreakfast, setAddBreakfast] = useState(false);
 
     const { booking, isLoading } = useBooking();
-    const { mutate: checkin, isLoading: isCheckingIn } = useCheckin();
+    const { checkin, isCheckingIn } = useChecking();
     const moveBack = useMoveBack();
     const { isLoading: isLoadingSettings, settings } = useSettings();
 
@@ -45,17 +44,18 @@ function CheckinBooking() {
 
     function handleCheckin() {
         if (!confirmPaid) return;
+        checkin(bookingId);
 
-        if (addBreakfast)
-            checkin({
-                bookingId,
-                breakfast: {
-                    hasBreakfast: true,
-                    extrasPrice: optionalBreakfastPrice,
-                    totalPrice: totalPrice + optionalBreakfastPrice,
-                },
-            });
-        else checkin({ bookingId, breakfast: {} });
+        // if (addBreakfast)
+        //     checkin({
+        //         bookingId,
+        //         breakfast: {
+        //             hasBreakfast: true,
+        //             extrasPrice: optionalBreakfastPrice,
+        //             totalPrice: totalPrice + optionalBreakfastPrice,
+        //         },
+        //     });
+        // else checkin({ bookingId, breakfast: {} });
     }
 
     // We return a fragment so that these elements fit into the page's layout
