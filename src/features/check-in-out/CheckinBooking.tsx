@@ -44,18 +44,19 @@ function CheckinBooking() {
 
     function handleCheckin() {
         if (!confirmPaid) return;
-        checkin(bookingId);
 
-        // if (addBreakfast)
-        //     checkin({
-        //         bookingId,
-        //         breakfast: {
-        //             hasBreakfast: true,
-        //             extrasPrice: optionalBreakfastPrice,
-        //             totalPrice: totalPrice + optionalBreakfastPrice,
-        //         },
-        //     });
-        // else checkin({ bookingId, breakfast: {} });
+        if (addBreakfast) {
+            checkin({
+                bookingId,
+                breakfast: {
+                    hasBreakfast: true,
+                    extrasPrice: optionalBreakfastPrice,
+                    totalPrice: totalPrice + optionalBreakfastPrice,
+                },
+            });
+        } else {
+            checkin({ bookingId, breakfast: {} });
+        }
     }
 
     // We return a fragment so that these elements fit into the page's layout
