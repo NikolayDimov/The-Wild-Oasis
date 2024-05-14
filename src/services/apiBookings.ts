@@ -1,8 +1,58 @@
-import { Booking } from "../features/bookings/BookingRow";
 import { BookingFilter, BookingSortBy } from "../features/bookings/useBookings";
 import { getToday } from "../utils/helpers";
 import supabase from "./supabase";
 import { PAGE_SIZE } from "../utils/constants";
+
+export interface Booking {
+    id: string;
+    created_at: Date;
+    startDate: Date;
+    endDate: Date;
+    numNights: number;
+    numGuests: number;
+    cabinPrice: number;
+    extrasPrice: number;
+    totalPrice: number;
+    hasBreakfast: boolean;
+    observations: string;
+    isPaid: boolean;
+    status: string;
+    guests: {
+        fullName: string;
+        email: string;
+        country: string;
+        countryFlag: string;
+        nationalID: string;
+    };
+    cabins: {
+        name: string;
+    };
+}
+
+export interface UpdateBookingData {
+    created_at?: Date;
+    startDate?: Date;
+    endDate?: Date;
+    numNights?: number;
+    numGuests?: number;
+    cabinPrice?: number;
+    extrasPrice?: number;
+    totalPrice?: number;
+    hasBreakfast?: boolean;
+    observations?: string;
+    isPaid?: boolean;
+    status?: string;
+    guests?: {
+        fullName: string;
+        email: string;
+        country: string;
+        countryFlag: string;
+        nationalID: string;
+    };
+    cabins?: {
+        name: string;
+    };
+}
 
 export interface BookingsResponse {
     data: Booking[];
@@ -115,8 +165,8 @@ export async function getStaysTodayActivity() {
     return data;
 }
 
-export async function updateBooking(id: string, obj: any) {
-    const { data, error } = await supabase.from("bookings").update(obj).eq("id", id).select().single();
+export async function updateBooking(id: string, dataObj: UpdateBookingData) {
+    const { data, error } = await supabase.from("bookings").update(dataObj).eq("id", id).select().single();
 
     if (error) {
         console.error(error);

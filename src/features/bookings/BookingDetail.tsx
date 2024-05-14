@@ -13,6 +13,9 @@ import { useMoveBack } from "../../hooks/useMoveBack";
 import BookingDataBox from "./BookingDataBox";
 import { useCheckout } from "../check-in-out/useCheckout";
 import { HiArrowUpOnSquare } from "react-icons/hi2";
+import Modal from "../../ui/Modal";
+import ConfirmDelete from "../../ui/ConfirmDelete";
+import { useDeleteBooking } from "./useDeleteBookings";
 
 const HeadingGroup = styled.div`
     display: flex;
@@ -27,6 +30,7 @@ function BookingDetail() {
 
     const moveBack = useMoveBack();
     const navigate = useNavigate();
+    const { deleteBooking, isDeleting } = useDeleteBooking();
 
     if (isLoading) return <Spinner />;
     if (!booking) return <Empty resource="booking" />;
@@ -67,19 +71,20 @@ function BookingDetail() {
                     </Button>
                 )}
 
-                {/* <Modal>
-                    <Modal.Toggle opens="delete">
+                <Modal>
+                    <Modal.Open opens="delete">
                         <Button variation="danger">Delete booking</Button>
-                    </Modal.Toggle>
+                    </Modal.Open>
                     <Modal.Window name="delete">
                         <ConfirmDelete
                             resource="booking"
                             // These options will be passed wherever the function gets called, and they determine what happens next
-                            onConfirm={(options) => deleteBooking(bookingId, options)}
+                            onConfirm={() => deleteBooking(bookingId, { onSettled: () => navigate(-1) })}
+                            // { onSettled: () => navigate(-1) } -> move back to previous page, because this page is deleted
                             disabled={isDeleting}
                         />
                     </Modal.Window>
-                </Modal> */}
+                </Modal>
 
                 <Button variation="secondary" onClick={moveBack}>
                     Back

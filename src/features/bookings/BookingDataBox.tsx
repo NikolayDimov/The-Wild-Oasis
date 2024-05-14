@@ -5,10 +5,10 @@ import { format, isToday } from "date-fns";
 
 import { HiOutlineChatBubbleBottomCenterText, HiOutlineCheckCircle, HiOutlineCurrencyDollar, HiOutlineHomeModern } from "react-icons/hi2";
 
-import { Booking } from "./BookingRow";
 import { formatCurrency, formatDistanceFromNow } from "../../utils/helpers";
 import DataItem from "../../ui/DataItem";
 import { Flag } from "../../ui/Flag";
+import { Booking } from "../../services/apiBookings";
 
 const StyledBookingDataBox = styled.section`
     padding: 3.2rem 4rem;

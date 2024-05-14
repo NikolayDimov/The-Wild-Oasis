@@ -10,31 +10,9 @@ import Menus from "../../ui/Menus";
 import { formatCurrency, formatDistanceFromNow } from "../../utils/helpers";
 import Table from "./TableBooking";
 import { useCheckout } from "../check-in-out/useCheckout";
-export interface Booking {
-    id: string;
-    created_at: Date;
-    startDate: Date;
-    endDate: Date;
-    numNights: number;
-    numGuests: number;
-    cabinPrice: number;
-    extrasPrice: number;
-    totalPrice: number;
-    hasBreakfast: boolean;
-    observations: string;
-    isPaid: boolean;
-    status: string;
-    guests: {
-        fullName: string;
-        email: string;
-        country: string;
-        countryFlag: string;
-        nationalID: string;
-    };
-    cabins: {
-        name: string;
-    };
-}
+import ConfirmDelete from "../../ui/ConfirmDelete";
+import { Booking } from "../../services/apiBookings";
+import { useDeleteBooking } from "./useDeleteBookings";
 
 const Cabin = styled.div`
     font-size: 1.6rem;
@@ -66,18 +44,18 @@ const Amount = styled.div`
 const BookingRow: React.FC<{ booking: Booking }> = ({ booking }) => {
     const {
         id: bookingId,
-        created_at,
+        // created_at,
         startDate,
         endDate,
         numNights,
-        numGuests,
+        // numGuests,
         totalPrice,
         status,
         guests: { fullName: guestName, email },
         cabins: { name: cabinName },
     } = booking;
 
-    // const { mutate: deleteBooking, isLoading: isDeleting } = useDeleteBooking();
+    const { deleteBooking, isDeleting } = useDeleteBooking();
     const { checkout, isCheckingOut } = useCheckout();
 
     const navigate = useNavigate();
@@ -140,22 +118,21 @@ const BookingRow: React.FC<{ booking: Booking }> = ({ booking }) => {
                         <Menus.Button icon={<HiPencil />}>Edit booking</Menus.Button>
                         {/* <Menus.Button>Delete</Menus.Button> */}
 
-                        {/* Now it gets a bit confusing... */}
-                        {/* <Modal.Toggle opens="delete">
+                        <Modal.Open opens="booking-delete">
                             <Menus.Button icon={<HiTrash />}>Delete booking</Menus.Button>
-                        </Modal.Toggle> */}
+                        </Modal.Open>
                     </Menus.List>
                 </Menus.Menu>
 
                 {/* This needs to be OUTSIDE of the menu, which in no problem. The compound component gives us this flexibility */}
-                {/* <Modal.Window name="delete">
+                <Modal.Window name="booking-delete">
                     <ConfirmDelete
                         resource="booking"
                         // These options will be passed wherever the function gets called, and they determine what happens next
-                        onConfirm={(options) => deleteBooking(bookingId, options)}
+                        onConfirm={() => deleteBooking(bookingId)}
                         disabled={isDeleting}
                     />
-                </Modal.Window> */}
+                </Modal.Window>
             </Modal>
 
             {/* <div>

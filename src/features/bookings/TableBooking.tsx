@@ -1,6 +1,6 @@
 import { ReactNode, createContext, useContext } from "react";
 import styled, { CSSProperties } from "styled-components";
-import { Booking } from "./BookingRow";
+import { Booking } from "../../services/apiBookings";
 
 export const StyledTable = styled.div`
     border: 1px solid var(--color-grey-200);

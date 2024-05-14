@@ -4,9 +4,10 @@ import Menus from "../../ui/Menus";
 
 import Empty from "../../ui/Empty";
 import { useBookings } from "./useBookings";
-import BookingRow, { Booking } from "./BookingRow";
+import BookingRow from "./BookingRow";
 import Table from "./TableBooking";
 import Pagination from "../../ui/Pagination";
+import { Booking } from "../../services/apiBookings";
 
 function BookingTable() {
     const { bookings, isLoading, count } = useBookings();
