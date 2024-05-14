@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 export function useDeleteBooking() {
     const queryClient = useQueryClient();
 
-    const mutation = useMutation({
+    const deleteBookingMtation = useMutation({
         mutationFn: (id: string) => deleteBookingApi(id),
         onSuccess: () => {
             toast.success("Booking successfully deleted");
@@ -16,8 +16,8 @@ export function useDeleteBooking() {
         onError: (err) => toast.error(err.message),
     });
 
-    const deleteBooking = mutation.mutate;
-    const isDeleting = mutation.status === "pending";
+    const deleteBooking = deleteBookingMtation.mutate;
+    const isDeleting = deleteBookingMtation.status === "pending";
 
     return { isDeleting, deleteBooking };
 }
