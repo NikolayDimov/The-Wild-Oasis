@@ -24,7 +24,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
 
     // 3. If there is NO authenticated user, redirect to the login page
     useEffect(() => {
-        if (!isAuthenticated && !isLoading) {
+        if (!isAuthenticated && isLoading) {
             navigate("/login");
         }
     }, [isAuthenticated, isLoading, navigate]);
