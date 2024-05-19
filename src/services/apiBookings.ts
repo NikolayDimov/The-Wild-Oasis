@@ -5,26 +5,26 @@ import { PAGE_SIZE } from "../utils/constants";
 
 export interface Booking {
     id: string;
-    created_at: Date;
-    startDate: Date;
-    endDate: Date;
-    numNights: number;
-    numGuests: number;
-    cabinPrice: number;
-    extrasPrice: number;
-    totalPrice: number;
-    hasBreakfast: boolean;
-    observations: string;
-    isPaid: boolean;
-    status: string;
-    guests: {
+    created_at?: Date;
+    startDate?: Date;
+    endDate?: Date;
+    numNights?: number;
+    numGuests?: number;
+    cabinPrice?: number;
+    extrasPrice?: number;
+    totalPrice?: number;
+    hasBreakfast?: boolean;
+    observations?: string;
+    isPaid?: boolean;
+    status?: string;
+    guests?: {
         fullName: string;
         email: string;
         country: string;
         countryFlag: string;
         nationalID: string;
     };
-    cabins: {
+    cabins?: {
         name: string;
     };
 }
@@ -114,7 +114,7 @@ export async function getBooking(id: string) {
 }
 
 // Returns all BOOKINGS that are were created after the given date. Useful to get bookings created in the last 30 days, for example.
-export async function getBookingsAfterDate(date: Date) {
+export async function getBookingsAfterDate(date: string): Promise<Booking[]> {
     const { data, error } = await supabase
         .from("bookings")
         .select("created_at, totalPrice, extrasPrice")
@@ -126,11 +126,11 @@ export async function getBookingsAfterDate(date: Date) {
         throw new Error("Bookings could not get loaded");
     }
 
-    return data;
+    return data as Booking[];
 }
 
 // Returns all STAYS that are were created after the given date
-export async function getStaysAfterDate(date: Date) {
+export async function getStaysAfterDate(date: string) {
     const { data, error } = await supabase
         .from("bookings")
         // .select('*')

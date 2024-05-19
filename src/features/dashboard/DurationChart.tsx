@@ -1,11 +1,12 @@
-import { useDarkMode } from "context/DarkModeContext";
+import { useDarkMode } from "../../context/DarkModeContext";
 import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 import styled from "styled-components";
-import { box } from "styles/styles";
-import Heading from "ui/Heading";
+// import { box } from "styles/styles";
+import Heading from "../../ui/Heading";
 
+// ${box}
 const ChartBox = styled.div`
-    ${box}
+    padding: 3.2rem 4rem;
     padding: 2.4rem 3.2rem;
 
     grid-column: 3 / span 2;
