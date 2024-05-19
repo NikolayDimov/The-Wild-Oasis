@@ -5,6 +5,29 @@ export interface LoginProps {
     password: string;
 }
 
+export interface SignupParams {
+    fullName: string;
+    email: string;
+    password: string;
+}
+
+export async function signup({ fullName, email, password }: SignupParams) {
+    const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+            data: {
+                fullName,
+                avatar: "",
+            },
+        },
+    });
+
+    if (error) throw new Error(error.message);
+
+    return data;
+}
+
 export async function login({ email, password }: LoginProps) {
     try {
         const { data, error } = await supabase.auth.signInWithPassword({
