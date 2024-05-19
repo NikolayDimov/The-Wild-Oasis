@@ -1,29 +1,33 @@
-import { useUser } from "features/authentication/useUser";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "../../ui/Button";
 import FileInput from "../../ui/FileInput";
 import Form from "../../ui/Form";
 import FormRow from "../../ui/FormRow";
 import Input from "../../ui/Input";
+import { useUser } from "./useUser";
 import { useUpdateUser } from "./useUpdateUser";
 
 function UpdateUserDataForm() {
-    // We don't need the loading state
-    const {
-        user: {
-            email,
-            user_metadata: { fullName: currentFullName },
-        },
-    } = useUser();
+    const { user } = useUser();
+
+    const email = user?.email;
+    const currentFullName = user?.user_metadata?.fullName;
 
     const [fullName, setFullName] = useState(currentFullName);
-    const [avatar, setAvatar] = useState(null);
+    const [avatar, setAvatar] = useState<File | null>(null);
 
-    const { mutate: updateUser, isLoading: isUpdating } = useUpdateUser();
+    useEffect(() => {
+        if (user && user.user_metadata) {
+            setFullName(user.user_metadata.fullName);
+        }
+    }, [user]);
 
-    function handleSubmit(e: React.ChangeEvent<HTMLInputElement>) {
+    const { updateUser, isUpdating } = useUpdateUser();
+
+    function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
         if (!fullName) return;
+        const form = e.target as HTMLFormElement;
 
         updateUser(
             { fullName, avatar },
@@ -31,13 +35,13 @@ function UpdateUserDataForm() {
                 onSuccess: () => {
                     setAvatar(null);
                     // Resetting form using .reset() that's available on all HTML form elements, otherwise the old filename will stay displayed in the UI
-                    e.target.reset();
+                    form.reset(); // Access the form directly and call reset on it
                 },
             }
         );
     }
 
-    function handleCancel(e: React.ChangeEvent<HTMLInputElement>) {
+    function handleCancel() {
         // We don't even need preventDefault because this button was designed to reset the form (remember, it has the HTML attribute 'reset')
         setFullName(currentFullName);
         setAvatar(null);
@@ -56,7 +60,12 @@ function UpdateUserDataForm() {
                     disabled={isUpdating}
                     id="avatar"
                     accept="image/*"
-                    onChange={(e) => setAvatar(e.target.files[0])}
+                    onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                            setAvatar(file);
+                        }
+                    }}
                     // We should also validate that it's actually an image, but never mind
                 />
             </FormRow>

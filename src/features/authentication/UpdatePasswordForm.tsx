@@ -1,23 +1,31 @@
-import { useForm } from "react-hook-form";
-
+import { useForm, SubmitHandler } from "react-hook-form";
 import { useUpdateUser } from "./useUpdateUser";
 import Button from "../../ui/Button";
 import Form from "../../ui/Form";
 import FormRow from "../../ui/FormRow";
 import Input from "../../ui/Input";
 
+interface FormData {
+    password: string;
+    passwordConfirm: string;
+}
+
 function UpdatePasswordForm() {
-    const { register, handleSubmit, formState, getValues, reset } = useForm();
+    const { register, handleSubmit, formState, getValues, reset } = useForm<FormData>();
     const { errors } = formState;
 
-    const { mutate: updateUser, isLoading: isUpdating } = useUpdateUser();
+    const { updateUser, isUpdating } = useUpdateUser();
 
-    function onSubmit({ password }) {
+    const onSubmit: SubmitHandler<FormData> = ({ password }) => {
         updateUser({ password }, { onSuccess: () => reset() });
-    }
+    };
 
-    function handleReset(e) {
-        // e.preventDefault();
+    // function handleReset(e: React.MouseEvent<HTMLButtonElement>) {
+    //     e.preventDefault();
+    //     reset();
+    // }
+
+    function handleReset() {
         reset();
     }
 
