@@ -310,11 +310,11 @@ const DurationChart: React.FC<DurationChartProps> = ({ confirmedStays }) => {
                     </Pie>
                     <Tooltip />
                     <Legend
-                        // verticalAlign='bottom'
-                        // align='center'
+                        // verticalAlign="bottom"
+                        // align="center"
                         verticalAlign="middle"
                         align="right"
-                        width={30}
+                        width={120}
                         layout="vertical"
                         iconSize={15}
                         iconType="circle"
