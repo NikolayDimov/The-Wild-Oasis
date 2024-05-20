@@ -110,9 +110,9 @@ const BookingDataBox: React.FC<BookingDataBoxProps> = ({ booking }) => {
         endDate,
         numNights,
         numGuests,
-        cabinPrice,
-        extrasPrice,
-        totalPrice,
+        cabinPrice = 0,
+        extrasPrice = 0,
+        totalPrice = 0,
         hasBreakfast,
         observations,
         isPaid,
@@ -131,9 +131,9 @@ const BookingDataBox: React.FC<BookingDataBoxProps> = ({ booking }) => {
                 </div>
 
                 <p>
-                    {format(new Date(startDate), "EEE, MMM dd yyyy")} (
-                    {isToday(new Date(startDate)) ? "Today" : formatDistanceFromNow(startDate)}) &mdash;{" "}
-                    {format(new Date(endDate), "EEE, MMM dd yyyy")}
+                    {startDate ? format(new Date(startDate), "EEE, MMM dd yyyy") : "Unknown Start Date"} (
+                    {startDate && isToday(new Date(startDate)) ? "Today" : startDate ? formatDistanceFromNow(new Date(startDate)) : ""})
+                    &mdash; {endDate ? format(new Date(endDate), "EEE, MMM dd yyyy") : "Unknown End Date"}
                 </p>
             </Header>
 
@@ -141,7 +141,7 @@ const BookingDataBox: React.FC<BookingDataBoxProps> = ({ booking }) => {
                 <Guest>
                     {countryFlag && <Flag src={countryFlag} alt={`Flag of ${country}`} />}
                     <p>
-                        {guestName} {numGuests > 1 ? `+ ${numGuests - 1} guests` : ""}
+                        {guestName} {numGuests && numGuests > 1 ? `+ ${numGuests - 1} guests` : ""}
                     </p>
                     <span>&bull;</span>
                     <p>{email}</p>
@@ -159,7 +159,7 @@ const BookingDataBox: React.FC<BookingDataBoxProps> = ({ booking }) => {
                     {hasBreakfast ? "Yes" : "No"}
                 </DataItem>
 
-                <Price isPaid={isPaid}>
+                <Price isPaid={isPaid ?? false}>
                     <DataItem icon={<HiOutlineCurrencyDollar />} label={`Total price`}>
                         {formatCurrency(totalPrice)}
 
@@ -171,7 +171,7 @@ const BookingDataBox: React.FC<BookingDataBoxProps> = ({ booking }) => {
             </Section>
 
             <Footer>
-                <p>Booked {format(new Date(created_at), "EEE, MMM dd yyyy, p")}</p>
+                <p>Booked {created_at ? format(new Date(created_at), "EEE, MMM dd yyyy, p") : "Unknown Booking Date"}</p>
             </Footer>
         </StyledBookingDataBox>
     );

@@ -6,25 +6,25 @@ import { PAGE_SIZE } from "../utils/constants";
 export interface Booking {
     id: string;
     created_at?: Date;
-    startDate?: Date;
-    endDate?: Date;
+    startDate: Date;
+    endDate: Date;
     numNights?: number;
     numGuests?: number;
     cabinPrice?: number;
     extrasPrice?: number;
-    totalPrice?: number;
+    totalPrice: number;
     hasBreakfast?: boolean;
     observations?: string;
     isPaid?: boolean;
-    status?: string;
-    guests?: {
+    status: string;
+    guests: {
         fullName: string;
         email: string;
         country: string;
         countryFlag: string;
         nationalID: string;
     };
-    cabins?: {
+    cabins: {
         name: string;
     };
 }

@@ -23,7 +23,7 @@ We need to distinguish between two types of data here:
 
 function DashboardLayout() {
     const { bookings = [], isLoading: isLoading1 } = useRecentBookings();
-    const { stays = [], isLoading: isLoading2, confirmedStays = [], numDays } = useRecentStays();
+    const { isLoading: isLoading2, confirmedStays = [], numDays } = useRecentStays();
     const { cabins = [], isLoading: isLoading3 } = useCabins();
 
     if (isLoading1 || isLoading2 || isLoading3) return <Spinner />;

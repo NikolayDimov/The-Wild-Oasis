@@ -1,11 +1,10 @@
-import { Link } from "react-router-dom";
 import styled from "styled-components";
 // import { box } from "styles/styles";
-import Button from "../../ui/Button";
 import Heading from "../../ui/Heading";
 import Row from "../../ui/Row";
 import Spinner from "../../ui/Spinner";
 import TodayItem from "../dashboard/TodayItem";
+import { useTodayActivity } from "./useTodayActivity";
 // import { useActivityTodayStays } from "./useActivityTodayStays";
 
 const StyledToday = styled.div`
@@ -37,8 +36,8 @@ const NoActivity = styled.p`
     margin-top: 0.8rem;
 `;
 
-function Today() {
-    // const { isLoading, stays } = useActivityTodayStays();
+function TodayActivity() {
+    const { isLoading, activities } = useTodayActivity();
 
     return (
         <StyledToday>
@@ -48,11 +47,11 @@ function Today() {
                 {/* id of -1 means there is no ID, which means a new booking will be made for a new guest */}
             </Row>
 
-            {/* {!isLoading ? (
-                stays?.length > 0 ? (
+            {!isLoading ? (
+                activities && activities?.length > 0 ? (
                     <TodayList>
-                        {stays.map((stay) => (
-                            <TodayItem key={stay.id} stay={stay} />
+                        {activities.map((activity) => (
+                            <TodayItem key={activity.id} activity={activity} />
                         ))}
                     </TodayList>
                 ) : (
@@ -60,48 +59,48 @@ function Today() {
                 )
             ) : (
                 <Spinner />
-            )} */}
+            )}
         </StyledToday>
     );
 }
 
-export default Today;
+export default TodayActivity;
 
-const OLDdata = [
-    {
-        id: 1,
-        status: "unconfirmed",
-        guests: { fullName: "Jonas Schmedtmann" },
-        numNights: 6,
-    },
-    {
-        id: 2,
-        status: "unconfirmed",
-        guests: { fullName: "Steven Miller" },
-        numNights: 1,
-    },
-    {
-        id: 3,
-        status: "checked-in",
-        guests: { fullName: "John Smith" },
-        numNights: 3,
-    },
-    {
-        id: 4,
-        status: "unconfirmed",
-        guests: { fullName: "Marta Schmedtmann" },
-        numNights: 14,
-    },
-    {
-        id: 5,
-        status: "checked-in",
-        guests: { fullName: "Miguel Silva" },
-        numNights: 5,
-    },
-    {
-        id: 6,
-        status: "checked-in",
-        guests: { fullName: "Mary Williams" },
-        numNights: 4,
-    },
-];
+// const OLDdata = [
+//     {
+//         id: 1,
+//         status: "unconfirmed",
+//         guests: { fullName: "Jonas Schmedtmann" },
+//         numNights: 6,
+//     },
+//     {
+//         id: 2,
+//         status: "unconfirmed",
+//         guests: { fullName: "Steven Miller" },
+//         numNights: 1,
+//     },
+//     {
+//         id: 3,
+//         status: "checked-in",
+//         guests: { fullName: "John Smith" },
+//         numNights: 3,
+//     },
+//     {
+//         id: 4,
+//         status: "unconfirmed",
+//         guests: { fullName: "Marta Schmedtmann" },
+//         numNights: 14,
+//     },
+//     {
+//         id: 5,
+//         status: "checked-in",
+//         guests: { fullName: "Miguel Silva" },
+//         numNights: 5,
+//     },
+//     {
+//         id: 6,
+//         status: "checked-in",
+//         guests: { fullName: "Mary Williams" },
+//         numNights: 4,
+//     },
+// ];
