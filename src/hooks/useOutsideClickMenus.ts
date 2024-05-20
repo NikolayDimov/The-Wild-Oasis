@@ -2,9 +2,10 @@ import { useEffect, useRef } from "react";
 
 interface useOutsideClickMenusProps {
     handler: (event: MouseEvent) => void;
+    useCapture?: boolean;
 }
 
-export function useOutsideClickMenus(props: useOutsideClickMenusProps): React.RefObject<HTMLUListElement> {
+export function useOutsideClickMenus(props: useOutsideClickMenusProps, useCapture = true): React.RefObject<HTMLUListElement> {
     const { handler } = props;
     const ref = useRef<HTMLUListElement>(null);
 
@@ -15,10 +16,10 @@ export function useOutsideClickMenus(props: useOutsideClickMenusProps): React.Re
             }
         }
 
-        document.addEventListener("click", handleClick, true);
+        document.addEventListener("click", handleClick, useCapture);
 
-        return () => document.removeEventListener("click", handleClick, true);
-    }, [handler]);
+        return () => document.removeEventListener("click", handleClick, useCapture);
+    }, [handler, useCapture]);
 
     return ref;
 }
