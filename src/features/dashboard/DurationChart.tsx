@@ -3,6 +3,7 @@ import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from "recha
 import styled from "styled-components";
 // import { box } from "styles/styles";
 import Heading from "../../ui/Heading";
+import { DurationData, Stay } from "./Stats";
 
 // ${box}
 const ChartBox = styled.div`
@@ -194,10 +195,14 @@ const startDataDark = [
     },
 ];
 
-function prepareData(startData, stays) {
+export interface DurationChartProps {
+    confirmedStays: Stay[];
+}
+
+function prepareData(startData: DurationData[], stays: Stay[]): DurationData[] {
     // A bit ugly code, but sometimes this is what it takes when working with real data 😅
 
-    function incArrayValue(arr, field) {
+    function incArrayValue(arr: DurationData[], field: string): DurationData[] {
         return arr.map((obj) => (obj.duration === field ? { ...obj, value: obj.value + 1 } : obj));
     }
 
@@ -276,7 +281,7 @@ function prepareData(startData, stays) {
   */
 }
 
-function DurationChart({ confirmedStays }) {
+const DurationChart: React.FC<DurationChartProps> = ({ confirmedStays }) => {
     const { isDarkMode } = useDarkMode();
     const startData = isDarkMode ? startDataDark : startDataLight;
     const data = prepareData(startData, confirmedStays);
@@ -299,7 +304,7 @@ function DurationChart({ confirmedStays }) {
                         startAngle={180}
                         endAngle={-180}
                     >
-                        {data.map((entry, i) => (
+                        {data.map((entry) => (
                             <Cell key={entry.duration} fill={entry.color} stroke={entry.color} />
                         ))}
                     </Pie>
@@ -309,7 +314,7 @@ function DurationChart({ confirmedStays }) {
                         // align='center'
                         verticalAlign="middle"
                         align="right"
-                        width="30%"
+                        width={30}
                         layout="vertical"
                         iconSize={15}
                         iconType="circle"
@@ -318,6 +323,6 @@ function DurationChart({ confirmedStays }) {
             </ResponsiveContainer>
         </ChartBox>
     );
-}
+};
 
 export default DurationChart;

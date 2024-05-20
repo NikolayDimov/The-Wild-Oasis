@@ -5,7 +5,7 @@ import { formatCurrency } from "../../utils/helpers";
 import { Booking } from "../../services/apiBookings";
 
 // Define the Stay interface
-interface Stay {
+export interface Stay {
     startDate: Date;
     endDate: Date;
     numNights: number;
@@ -13,11 +13,17 @@ interface Stay {
 }
 
 // Define the StatsProps interface
-interface StatsProps {
+export interface StatsProps {
     bookings: Booking[];
     confirmedStays: Stay[];
     numDays: number;
     cabinCount: number;
+}
+
+export interface DurationData {
+    duration: string;
+    value: number;
+    color: string;
 }
 
 const Stats: React.FC<StatsProps> = ({ bookings, confirmedStays, numDays, cabinCount }) => {
