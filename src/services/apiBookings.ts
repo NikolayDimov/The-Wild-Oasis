@@ -3,6 +3,17 @@ import { getToday } from "../utils/helpers";
 import supabase from "./supabase";
 import { PAGE_SIZE } from "../utils/constants";
 
+export interface GuestProps {
+    fullName: string;
+    email: string;
+    country: string;
+    countryFlag: string;
+    nationalID: string;
+}
+
+interface Cabin {
+    name: string;
+}
 export interface Booking {
     id: string;
     created_at?: Date;
@@ -17,16 +28,18 @@ export interface Booking {
     observations?: string;
     isPaid?: boolean;
     status: string;
-    guests: {
-        fullName: string;
-        email: string;
-        country: string;
-        countryFlag: string;
-        nationalID: string;
-    };
-    cabins: {
-        name: string;
-    };
+    // guests: {
+    //     fullName: string;
+    //     email: string;
+    //     country: string;
+    //     countryFlag: string;
+    //     nationalID: string;
+    // };
+    guests: GuestProps;
+    // cabins: {
+    //     name: string;
+    // };
+    cabins: Cabin;
 }
 
 export interface UpdateBookingData {
@@ -42,16 +55,18 @@ export interface UpdateBookingData {
     observations?: string;
     isPaid?: boolean;
     status?: string;
-    guests?: {
-        fullName: string;
-        email: string;
-        country: string;
-        countryFlag: string;
-        nationalID: string;
-    };
-    cabins?: {
-        name: string;
-    };
+    // guests?: {
+    //     fullName: string;
+    //     email: string;
+    //     country: string;
+    //     countryFlag: string;
+    //     nationalID: string;
+    // };
+    guests: GuestProps;
+    // cabins?: {
+    //     name: string;
+    // };
+    cabins: Cabin;
 }
 
 export interface BookingsResponse {
@@ -93,6 +108,12 @@ export async function getBookings({
     }
 
     const { data, error, count } = await query;
+
+    // Log data, error, count, and page
+    console.log("Data:", data);
+    console.log("Error:", error);
+    console.log("Count:", count);
+    console.log("Page:", page);
 
     if (error) {
         console.error(error);

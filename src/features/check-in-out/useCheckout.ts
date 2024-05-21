@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { updateBooking } from "../../services/apiBookings";
+import { Booking, UpdateBookingData, updateBooking } from "../../services/apiBookings";
 import toast from "react-hot-toast";
 
 export function useCheckout() {
@@ -7,8 +7,16 @@ export function useCheckout() {
 
     const checkoutMutation = useMutation({
         mutationFn: async (bookingId: string) => {
-            const data = await updateBooking(bookingId, { status: "checked-out" });
-            return data;
+            // Define the data object with the correct type and initial values
+            const data: UpdateBookingData = {
+                status: "checked-out",
+                guests: { fullName: "", email: "", country: "", countryFlag: "", nationalID: "" },
+                cabins: { name: "" },
+            };
+
+            // Perform the updateBooking mutation
+            const updatedBooking: Booking = await updateBooking(bookingId, data);
+            return updatedBooking;
         },
 
         onSuccess: (data) => {

@@ -106,10 +106,10 @@ interface RowProps {
     role?: string;
 }
 
-const Row: React.FC<RowProps> = ({ children, role }) => {
+const Row: React.FC<RowProps> = ({ children, role = "row" }) => {
     const { columns } = useContext(TableContext);
     return (
-        <StyledRow role="row" $columns={columns}>
+        <StyledRow role={role} $columns={columns}>
             {children}
         </StyledRow>
     );

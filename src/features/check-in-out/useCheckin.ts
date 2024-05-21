@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { updateBooking } from "../../services/apiBookings";
+import { UpdateBookingData, updateBooking } from "../../services/apiBookings";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
@@ -17,7 +17,20 @@ export function useChecking() {
 
     const checkinMutation = useMutation({
         mutationFn: async ({ bookingId, breakfast }: { bookingId: string; breakfast: BreakfastType }) => {
-            const updatedData = { status: "checked-in", isPaid: true, ...(breakfast || {}) };
+            // Define the updatedData with the correct type and initial values
+            let updatedData: UpdateBookingData = {
+                status: "checked-in",
+                isPaid: true,
+                guests: { fullName: "", email: "", country: "", countryFlag: "", nationalID: "" },
+                cabins: { name: "" },
+            };
+
+            // If breakfast is provided, add its properties to updatedData
+            if (breakfast) {
+                updatedData = { ...updatedData, ...breakfast };
+            }
+
+            // Perform the updateBooking mutation
             const data = await updateBooking(bookingId, updatedData);
             return data;
         },

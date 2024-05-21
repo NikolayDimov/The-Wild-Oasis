@@ -51,9 +51,11 @@ const BookingRow: React.FC<{ booking: Booking }> = ({ booking }) => {
         // numGuests,
         totalPrice,
         status,
-        guests: { fullName: guestName, email },
+        guests: { email, fullName: guestName },
         cabins: { name: cabinName },
     } = booking;
+
+    console.log("booking", booking);
 
     const { deleteBooking, isDeleting } = useDeleteBooking();
     const { checkout, isCheckingOut } = useCheckout();
